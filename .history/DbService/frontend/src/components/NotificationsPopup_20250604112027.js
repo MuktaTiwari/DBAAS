@@ -22,7 +22,7 @@ import {
   ToggleButtonGroup,
   Skeleton
 } from "@mui/material";
-import {
+import { 
   Notifications as NotificationsIcon,
   ArrowBack,
   CheckCircleOutline,
@@ -81,89 +81,85 @@ const NotificationsPage = () => {
   };
 
   const fetchTableLimitNotifications = async () => {
-    try {
-      setLoading(true);
-      const response = await axiosInstance.get('/database/', {
-        headers: { Authorization: `${localStorage.getItem("token")}` },
-      });
-      const userDatabases = response.data.data || [];
+  try {
+    setLoading(true);
+    const response = await axiosInstance.get('/database/', {
+      headers: { Authorization: `${localStorage.getItem("token")}` },
+    });
+    const userDatabases = response.data.data || [];
 
-      const limitNotifications = await Promise.all(
-        userDatabases.map(async (db) => {
-          try {
-            const tableCountResponse = await axiosInstance.get(`/database/table-count?dbName=${db.dbName}`, {
-              headers: { Authorization: `${localStorage.getItem("token")}` },
-            });
+    const limitNotifications = await Promise.all(
+      userDatabases.map(async (db) => {
+        try {
+          const tableCountResponse = await axiosInstance.get(`/database/table-count?dbName=${db.dbName}`, {
+            headers: { Authorization: `${localStorage.getItem("token")}` },
+          });
 
-            const tableCount = tableCountResponse.data.data?.tableCount || 0;
-            const MAX_TABLES_PER_DB = 3;
+          const tableCount = tableCountResponse.data.data?.tableCount || 0;
+          const MAX_TABLES_PER_DB = 3;
 
-            if (tableCount >= MAX_TABLES_PER_DB) {
-              return {
-                id: `limit-${db.dbId}`,
-                message: `Table limit reached for "${db.dbName}"`,
-                description: `You've created ${tableCount} tables (limit: ${MAX_TABLES_PER_DB}). Upgrade your plan to add more tables.`,
-                dbName: db.dbName,
-                isRead: false,
-                isStarred: false,
-                type: 'limit',
-                priority: 'high',
-                timestamp: new Date()
-              };
-            }
-            return null;
-          } catch (error) {
-            console.error(`Error checking table count for ${db.dbName}:`, error);
-            return null;
-          }
-        })
-      );
-
-      const resolvedNotifications = limitNotifications.filter(n => n !== null);
-
-      setNotifications(prev => {
-        const otherNotifications = prev.filter(n => n.type !== 'limit');
-        const newNotifications = [...otherNotifications, ...resolvedNotifications];
-
-        // Add sample notifications if none exist (for demo)
-        if (resolvedNotifications.length === 0 && newNotifications.length === 0) {
-          return [
-            {
-              id: 'sample-info',
-              message: 'Welcome to DBaaS Notifications',
-              description: 'Here you will see important alerts about your databases',
+          if (tableCount >= MAX_TABLES_PER_DB) {
+            return {
+              id: `limit-${db.dbId}`,
+              message: `Table limit reached for "${db.dbName}"`,
+              description: `You've created ${tableCount} tables (limit: ${MAX_TABLES_PER_DB}). Upgrade your plan to add more tables.`,
+              dbName: db.dbName,
               isRead: false,
               isStarred: false,
-              type: 'info',
-              priority: 'low',
-              timestamp: new Date(Date.now() - 1000 * 60 * 60 * 2) // 2 hours ago
-            },
-            {
-              id: 'sample-tip',
-              message: 'Pro Tip: Organize your databases',
-              description: 'Use tags and categories to keep your databases organized',
-              isRead: true,
-              isStarred: true,
-              type: 'info',
-              priority: 'low',
-              timestamp: new Date(Date.now() - 1000 * 60 * 60 * 24) // 1 day ago
-            }
-          ];
+              type: 'limit',
+              priority: 'high',
+              timestamp: new Date()
+            };
+          }
+          return null;
+        } catch (error) {
+          console.error(`Error checking table count for ${db.dbName}:`, error);
+          return null;
         }
+      })
+    );
 
-        return newNotifications;
-      });
-    } catch (error) {
-      console.error('Error fetching notifications:', error);
-    } finally {
-      setLoading(false);
-      setRefreshing(false);
-    }
-  };
-
-
-
-  
+    const resolvedNotifications = limitNotifications.filter(n => n !== null);
+    
+    setNotifications(prev => {
+      const otherNotifications = prev.filter(n => n.type !== 'limit');
+      const newNotifications = [...otherNotifications, ...resolvedNotifications];
+      
+      // Add sample notifications if none exist (for demo)
+      if (resolvedNotifications.length === 0 && newNotifications.length === 0) {
+        return [
+          {
+            id: 'sample-info',
+            message: 'Welcome to DBaaS Notifications',
+            description: 'Here you will see important alerts about your databases',
+            isRead: false,
+            isStarred: false,
+            type: 'info',
+            priority: 'low',
+            timestamp: new Date(Date.now() - 1000 * 60 * 60 * 2) // 2 hours ago
+          },
+          {
+            id: 'sample-tip',
+            message: 'Pro Tip: Organize your databases',
+            description: 'Use tags and categories to keep your databases organized',
+            isRead: true,
+            isStarred: true,
+            type: 'info',
+            priority: 'low',
+            timestamp: new Date(Date.now() - 1000 * 60 * 60 * 24) // 1 day ago
+          }
+        ];
+      }
+      
+      return newNotifications;
+    });
+  } catch (error) {
+    console.error('Error fetching notifications:', error);
+  } finally {
+    setLoading(false);
+    setRefreshing(false);
+  }
+};
   const handleRefresh = () => {
     setRefreshing(true);
     fetchTableLimitNotifications();
@@ -191,14 +187,14 @@ const NotificationsPage = () => {
   };
 
   const handleMarkAsRead = (ids) => {
-    setNotifications(prev =>
+    setNotifications(prev => 
       prev.map(n => ids.includes(n.id) ? { ...n, isRead: true } : n)
     );
     setSelected([]);
   };
 
   const handleMarkAsUnread = (ids) => {
-    setNotifications(prev =>
+    setNotifications(prev => 
       prev.map(n => ids.includes(n.id) ? { ...n, isRead: false } : n)
     );
     setSelected([]);
@@ -210,7 +206,7 @@ const NotificationsPage = () => {
   };
 
   const toggleStar = (id) => {
-    setNotifications(prev =>
+    setNotifications(prev => 
       prev.map(n => n.id === id ? { ...n, isStarred: !n.isStarred } : n)
     );
   };
@@ -226,9 +222,9 @@ const NotificationsPage = () => {
 
   const toggleSelect = (id, event) => {
     event.stopPropagation();
-    setSelected(prev =>
-      prev.includes(id)
-        ? prev.filter(item => item !== id)
+    setSelected(prev => 
+      prev.includes(id) 
+        ? prev.filter(item => item !== id) 
         : [...prev, id]
     );
   };
@@ -248,7 +244,7 @@ const NotificationsPage = () => {
     const initializeNotifications = async () => {
       await cleanupNotifications();
       await fetchTableLimitNotifications();
-
+      
       const interval = setInterval(fetchTableLimitNotifications, 300000);
       return () => clearInterval(interval);
     };
@@ -268,14 +264,14 @@ const NotificationsPage = () => {
 
   return (
     <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-      <Paper elevation={3} sx={{
-        borderRadius: '12px',
+      <Paper elevation={3} sx={{ 
+        borderRadius: '12px', 
         overflow: 'hidden',
         boxShadow: theme.shadows[4]
       }}>
         {/* Header */}
-        <Box sx={{
-          p: 2,
+        <Box sx={{ 
+          p: 2, 
           borderBottom: `1px solid ${theme.palette.divider}`,
           display: 'flex',
           justifyContent: 'space-between',
@@ -295,25 +291,25 @@ const NotificationsPage = () => {
               Notifications Center
             </Typography>
             <Box sx={{ display: 'flex', gap: 1 }}>
-              <Chip
-                label={`${unreadCount} unread`}
-                color="primary"
+              <Chip 
+                label={`${unreadCount} unread`} 
+                color="primary" 
                 size="small"
                 variant="outlined"
               />
-              <Chip
-                label={`${starredCount} starred`}
-                color="secondary"
+              <Chip 
+                label={`${starredCount} starred`} 
+                color="secondary" 
                 size="small"
                 variant="outlined"
               />
             </Box>
           </Box>
-
+          
           <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
             <Tooltip title="Refresh">
               <IconButton onClick={handleRefresh} disabled={refreshing}>
-                <Refresh sx={{
+                <Refresh sx={{ 
                   color: theme.palette.primary.main,
                   animation: refreshing ? 'spin 1s linear infinite' : 'none',
                   '@keyframes spin': {
@@ -323,13 +319,13 @@ const NotificationsPage = () => {
                 }} />
               </IconButton>
             </Tooltip>
-
+            
             <Tooltip title="Filter">
               <IconButton onClick={handleFilterMenuOpen}>
                 <FilterList />
               </IconButton>
             </Tooltip>
-
+            
             <Menu
               anchorEl={filterMenuAnchor}
               open={Boolean(filterMenuAnchor)}
@@ -359,7 +355,7 @@ const NotificationsPage = () => {
             >
               Mark Read
             </Button>
-
+            
             <Button
               variant="outlined"
               color="error"
@@ -370,11 +366,11 @@ const NotificationsPage = () => {
             >
               Delete
             </Button>
-
+            
             <IconButton onClick={handleMenuOpen}>
               <MoreVert />
             </IconButton>
-
+            
             <Menu
               anchorEl={anchorEl}
               open={Boolean(anchorEl)}
@@ -404,8 +400,8 @@ const NotificationsPage = () => {
         </Box>
 
         {/* Filter Tabs */}
-        <Box sx={{
-          display: 'flex',
+        <Box sx={{ 
+          display: 'flex', 
           borderBottom: `1px solid ${theme.palette.divider}`,
           backgroundColor: theme.palette.grey[50],
           overflowX: 'auto',
@@ -468,17 +464,17 @@ const NotificationsPage = () => {
                     },
                     transition: 'all 0.2s ease',
                     position: 'relative',
-                    borderLeft: notification.priority === 'high'
+                    borderLeft: notification.priority === 'high' 
                       ? `4px solid ${theme.palette.error.main}`
                       : notification.priority === 'medium'
-                        ? `4px solid ${theme.palette.warning.main}`
-                        : `4px solid ${theme.palette.grey[300]}`,
+                      ? `4px solid ${theme.palette.warning.main}`
+                      : `4px solid ${theme.palette.grey[300]}`,
                     opacity: notification.isRead ? 0.9 : 1
                   }}
                   onClick={() => handleNotificationClick(notification)}
                 >
-                  <ListItemIcon
-                    sx={{
+                  <ListItemIcon 
+                    sx={{ 
                       minWidth: 40,
                       alignSelf: 'flex-start',
                       mt: 1.5
@@ -496,12 +492,12 @@ const NotificationsPage = () => {
                         {selected.includes(notification.id) ? (
                           <CheckCircleOutline color="primary" />
                         ) : (
-                          <Avatar sx={{
-                            bgcolor: notification.isRead
-                              ? theme.palette.grey[300]
+                          <Avatar sx={{ 
+                            bgcolor: notification.isRead 
+                              ? theme.palette.grey[300] 
                               : theme.palette.primary.main,
-                            color: notification.isRead
-                              ? theme.palette.text.secondary
+                            color: notification.isRead 
+                              ? theme.palette.text.secondary 
                               : theme.palette.primary.contrastText,
                             width: 28,
                             height: 28
@@ -512,7 +508,7 @@ const NotificationsPage = () => {
                       </IconButton>
                     </Tooltip>
                   </ListItemIcon>
-
+                  
                   <ListItemText
                     primary={
                       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
@@ -575,7 +571,7 @@ const NotificationsPage = () => {
                     }
                     sx={{ ml: 2 }}
                   />
-
+                  
                   {!notification.isRead && (
                     <Box sx={{
                       position: 'absolute',
@@ -587,10 +583,10 @@ const NotificationsPage = () => {
                       backgroundColor: theme.palette.primary.main
                     }} />
                   )}
-
-                  <Box sx={{
-                    position: 'absolute',
-                    bottom: 8,
+                  
+                  <Box sx={{ 
+                    position: 'absolute', 
+                    bottom: 8, 
                     right: 12,
                     display: 'flex',
                     gap: 0.5
@@ -663,29 +659,29 @@ const NotificationsPage = () => {
               color: theme.palette.text.secondary,
               mb: 1.5
             }}>
-              {view === 'all'
+              {view === 'all' 
                 ? "No notifications yet"
                 : view === 'unread'
-                  ? "No unread notifications"
-                  : view === 'limits'
-                    ? "No database limit alerts"
-                    : "No starred notifications"}
+                ? "No unread notifications"
+                : view === 'limits'
+                ? "No database limit alerts"
+                : "No starred notifications"}
             </Typography>
             <Typography variant="body1" sx={{
               color: theme.palette.text.disabled,
               maxWidth: '500px',
               mb: 3
             }}>
-              {view === 'all'
+              {view === 'all' 
                 ? "When you receive new notifications, they'll appear here."
                 : view === 'unread'
-                  ? "You're all caught up with your notifications."
-                  : view === 'limits'
-                    ? "No databases have reached their table limits."
-                    : "Star important notifications to find them easily later."}
+                ? "You're all caught up with your notifications."
+                : view === 'limits'
+                ? "No databases have reached their table limits."
+                : "Star important notifications to find them easily later."}
             </Typography>
-            <Button
-              variant="outlined"
+            <Button 
+              variant="outlined" 
               onClick={handleRefresh}
               startIcon={<Refresh />}
               disabled={refreshing}

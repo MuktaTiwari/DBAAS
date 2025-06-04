@@ -228,6 +228,10 @@ export default function Layout({ children }) {
                   <Notifications sx={{ color: theme.palette.text.secondary }} />
                 </Badge>
               </IconButton>
+              <IconButton size="medium" color="inherit">
+                <Settings sx={{ color: theme.palette.text.secondary }} />
+              </IconButton>
+
               <IconButton
                 onClick={handleMenuOpen}
                 size="small"

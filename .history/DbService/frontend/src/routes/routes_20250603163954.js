@@ -60,10 +60,10 @@ export const routes = [
         path: "/pricing",
         element: <PricingPlans />,
       },
-      {
-        path: "/notifications",
-        element: <NotificationsPage notifications={[]} onClearAll={() => { }} />,
-      },
+       {
+    path: "/notifications",
+    element: <NotificationsPage notifications={[]} onClearAll={() => {}} />,
+  },
     ],
   },
 ];

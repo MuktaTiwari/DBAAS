@@ -214,20 +214,16 @@ export default function Layout({ children }) {
                 }
               }
             }}>
-              <IconButton
-                size="medium"
-                color="inherit"
-                onClick={() => navigate('/notifications')}
-                sx={{
-                  '&:hover': {
-                    backgroundColor: alpha(theme.palette.primary.main, 0.1)
-                  }
-                }}
-              >
-                <Badge badgeContent={unreadCount} color="error">
-                  <Notifications sx={{ color: theme.palette.text.secondary }} />
-                </Badge>
+               <NotificationsPopup 
+                notifications={notifications}
+                unreadCount={unreadCount}
+                onClearAll={() => setNotifications([])}
+              />
+
+              <IconButton size="medium" color="inherit">
+                <Settings sx={{ color: theme.palette.text.secondary }} />
               </IconButton>
+
               <IconButton
                 onClick={handleMenuOpen}
                 size="small"

@@ -722,6 +722,7 @@ export class TableService {
     return normalizedPgType.toUpperCase() !== requestedType.toUpperCase();
   }
 
+
   // Fixed getTableColumns method to match your IColumn interface exactly
   //  public async getTableColumns(orgId: string, dbName: string, tableName: string): Promise<IColumn[]> {
   //   // First check if table exists

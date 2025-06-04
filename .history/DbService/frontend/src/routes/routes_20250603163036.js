@@ -11,6 +11,7 @@ import AuthGuard from "../guards/AuthGuard";
 import Layout from "../components/layout/layout";
 import LaunchPagePyramid from "../components/PyramidLaunch/LaunchPagePyramid";
 import NotificationsPage from "../components/NotificationsPopup";
+
 const PrivateRoute = ({ children }) => {
   const token = localStorage.getItem("token");
   return token ? children : <Navigate to="/" />;
@@ -61,8 +62,8 @@ export const routes = [
         element: <PricingPlans />,
       },
       {
-        path: "/notifications",
-        element: <NotificationsPage notifications={[]} onClearAll={() => { }} />,
+        path: "/notification",
+        element: <Notification />,
       },
     ],
   },

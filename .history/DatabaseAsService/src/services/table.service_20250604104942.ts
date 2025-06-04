@@ -76,7 +76,7 @@ export class TableService {
         referencedColumn: string;
       }> = [];
       for (const field of schema) {
-        schemaStructure[field.name] = {
+        schemaStructure[field.name] = {.
           type: mapDataType(field.type),
           allowNull: field.isNullable ?? true,
           unique: field.isUnique ?? false,
@@ -95,7 +95,7 @@ export class TableService {
 
       const DynamicModel = sequelize.define(tableName, schemaStructure, {
         freezeTableName: true,
-      });
+      }); 
       await sequelize.authenticate();
       await DynamicModel.sync({ force: false });
         for (const constraint of foreignKeyConstraints) {

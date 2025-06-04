@@ -62,7 +62,7 @@ export const routes = [
       },
       {
         path: "/notifications",
-        element: <NotificationsPage notifications={[]} onClearAll={() => { }} />,
+        element: <NotificationsPopup />,
       },
     ],
   },

@@ -160,10 +160,6 @@ const NotificationsPage = () => {
       setRefreshing(false);
     }
   };
-
-
-
-  
   const handleRefresh = () => {
     setRefreshing(true);
     fetchTableLimitNotifications();

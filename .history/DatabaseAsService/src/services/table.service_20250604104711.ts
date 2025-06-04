@@ -76,7 +76,7 @@ export class TableService {
         referencedColumn: string;
       }> = [];
       for (const field of schema) {
-        schemaStructure[field.name] = {
+        schemaStructure[field.name] = {.
           type: mapDataType(field.type),
           allowNull: field.isNullable ?? true,
           unique: field.isUnique ?? false,
